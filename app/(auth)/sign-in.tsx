@@ -27,9 +27,6 @@ const SignIn = () => {
 
       AsyncStorage.setItem("userId", data.user.id.toString());
       AsyncStorage.setItem("token", data.accessToken);
-      AsyncStorage.setItem("firstName", data.user.firstName);
-      AsyncStorage.setItem("lastName", data.user.lastName);
-      AsyncStorage.setItem("email", data.user.email);
 
       router.push("/feed");
     },

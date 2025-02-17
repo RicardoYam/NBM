@@ -99,3 +99,23 @@ export const createPost = async ({
     throw error;
   }
 };
+
+export const createLikePosts = async ({ postId }: { postId: number }) => {
+  try {
+    const response = await nbmClient.post(`/posts/${postId}/like`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteLikePosts = async ({ postId }: { postId: number }) => {
+  try {
+    const response = await nbmClient.delete(`/posts/${postId}/like`);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

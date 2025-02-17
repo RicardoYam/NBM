@@ -4,6 +4,8 @@ import PostCreateHeader from "@/components/post-create-header";
 import { router } from "expo-router";
 import DropDown from "@/components/drop-down";
 import { Category } from "@/types/feed";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCategoryStore } from "@/store/useCategoryStore";
 
 interface Props {
   formik: any;
@@ -11,6 +13,10 @@ interface Props {
 }
 
 const CreatePostStepThree = ({ formik, categories }: Props) => {
+  const { selectedCategory } = useCategoryStore((state) => state);
+
+  const queryClient = useQueryClient();
+
   const handleTagToggle = (tag: string) => {
     const currentTags: string[] = formik.values.tags ?? [];
 
@@ -28,8 +34,8 @@ const CreatePostStepThree = ({ formik, categories }: Props) => {
     const error = await formik.validateForm();
 
     if (!error.title || !error.content || !error.tag) {
-      // TODO: Handle submission api call
       formik.handleSubmit();
+      queryClient.invalidateQueries({ queryKey: ["posts", selectedCategory] });
     }
   };
 

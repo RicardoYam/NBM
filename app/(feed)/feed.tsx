@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCategories, getAllPosts } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import Loading from "@/components/loading";
+import { PAGE_LIMIT, PAGE_NUMBER } from "@/constants/primitive";
 
 const Feed = () => {
   const [searchContent, setSearchContent] = useState<string>("");
@@ -17,15 +18,15 @@ const Feed = () => {
 
   const getCategoryQuery = useQuery({
     queryKey: ["categories"],
-    queryFn: () => getAllCategories({ page: 1, limit: 10 }),
+    queryFn: () => getAllCategories({ page: PAGE_NUMBER, limit: PAGE_LIMIT }),
   });
 
   const getPostsQuery = useQuery({
     queryKey: ["posts", selectedCategory],
     queryFn: () =>
       getAllPosts({
-        page: 1,
-        limit: 10,
+        page: PAGE_NUMBER,
+        limit: PAGE_LIMIT,
         tags: selectedCategory ? [selectedCategory] : [],
       }),
     enabled: !!getCategoryQuery.data,

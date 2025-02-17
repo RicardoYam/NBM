@@ -3,30 +3,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import PostCreateHeader from "@/components/post-create-header";
 import ImageUpload from "@/components/image-upload";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { User } from "@/types/user";
 
 const PersonalInformation = () => {
+  const queryClient = useQueryClient();
+  const currentUser = queryClient
+    .getMutationCache()
+    .find({ mutationKey: ["signInUser"] })?.state.data as User;
+
   const [userInfo, setUserInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: currentUser.user.firstName,
+    lastName: currentUser.user.lastName,
+    email: currentUser.user.email,
   });
-
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const firstName = await AsyncStorage.getItem("firstName");
-      const lastName = await AsyncStorage.getItem("lastName");
-      const email = await AsyncStorage.getItem("email");
-      setUserInfo({
-        firstName: firstName || "",
-        lastName: lastName || "",
-        email: email || "",
-      });
-    };
-
-    fetchUserInfo();
-  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

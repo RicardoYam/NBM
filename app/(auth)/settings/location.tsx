@@ -8,7 +8,6 @@ import { User } from "@/types/user";
 
 const Location = () => {
   const queryClient = useQueryClient();
-
   const currentUser = queryClient
     .getMutationCache()
     .find({ mutationKey: ["signInUser"] })?.state.data as User;

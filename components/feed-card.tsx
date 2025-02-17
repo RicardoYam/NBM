@@ -7,6 +7,7 @@ import PostInfo from "./post-info";
 import { icons } from "@/constants";
 import { getDate } from "@/utils/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ion from "react-native-vector-icons/Ionicons";
 
 interface Props {
   post: Post | undefined;
@@ -85,13 +86,24 @@ const FeedCard = ({
             {post.content}
           </Text>
 
-          <View className="flex flex-row items-center text-center gap-2 relative">
-            <View className="mt-2">
-              <icons.Comment />
+          <View className="flex flex-row gap-4 relative">
+            <View className="flex flex-row gap-2 items-center text-center">
+              <View className="mt-2">
+                <icons.Comment />
+              </View>
+              <Text className="font-syne font-normal text-[14px] text-charcoal top-0.5">
+                {post.comments}
+              </Text>
             </View>
-            <Text className="font-syne font-normal text-[14px] text-charcoal">
-              {post.comments}
-            </Text>
+
+            <View className="flex flex-row gap-2 items-center text-center">
+              <View className="mt-2">
+                <Ion name="heart-outline" size={24} color="#000" />
+              </View>
+              <Text className="font-syne font-normal text-[14px] text-charcoal top-0.5">
+                {post.likes}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
