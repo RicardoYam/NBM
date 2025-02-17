@@ -16,13 +16,7 @@ interface Props {
   formik: any;
 }
 
-const AuthSignUpStepTwo = ({
-  isError,
-  handleErrors,
-  formik,
-  title,
-  subTitle,
-}: Props) => {
+const AuthSignUpStepTwo = ({ formik, title, subTitle }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [addressPredictions, setAddressPredictions] = useState<Prediction[]>(
     []
