@@ -1,0 +1,21 @@
+import * as Yup from "yup";
+import { REQUIRED_MESSAGE, WRONG_FORMAT_MESSAGE } from "@/constants/strings";
+
+export const VALIDATIONSCHEMA_SIGN_UP = Yup.object().shape({
+  firstName: Yup.string().required(REQUIRED_MESSAGE("first name")),
+  lastName: Yup.string().required(REQUIRED_MESSAGE("last name")),
+  email: Yup.string()
+    .email(WRONG_FORMAT_MESSAGE)
+    .required(REQUIRED_MESSAGE("email")),
+  password: Yup.string()
+    .matches(/\d/, "Password must include at least one number.")
+    .matches(/[^A-Za-z0-9]/, "Password must include at least one symbol.")
+    .matches(
+      /(?=.*[a-z])(?=.*[A-Z])/,
+      "Password must include both uppercase and lowercase letters."
+    )
+    .required(REQUIRED_MESSAGE("password")),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), undefined], "Passwords must match.")
+    .required(REQUIRED_MESSAGE("confirm password")),
+});
