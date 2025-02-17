@@ -84,7 +84,7 @@ const Id = () => {
       </ScrollView>
 
       {/* Make a comment */}
-      <View className="flex flex-row gap-2 items-center border-t border-charcoal pt-6">
+      <View className="flex flex-row gap-2 items-center border-t border-charcoal pt-6 px-7">
         <TextInput
           value={commentContent}
           placeholder="Make a Comment"
