@@ -1,15 +1,69 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePostComments } from "@/services/feed";
+import { useLocalSearchParams } from "expo-router";
+import { useCategoryStore } from "@/store/useCategoryStore";
 
 interface Props {
   authorId: number;
   author: string;
+  postId: number;
+  commentId: number;
   date: string;
 }
 
-const PostInfo = ({ authorId, author, date }: Props) => {
-  const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
+const PostInfo = ({ authorId, author, postId, commentId, date }: Props) => {
+  const queryClient = useQueryClient();
+  const { id } = useLocalSearchParams();
+  const currentPostId = Array.isArray(id) ? id[0] : id;
+
+  const { selectedCategories } = useCategoryStore((state) => state);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const deleteCommentMutation = useMutation({
+    mutationKey: ["deleteComment", postId, commentId],
+    mutationFn: () => deletePostComments({ postId, commentId }),
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+
+      const previousPosts = queryClient.getQueryData([
+        "posts",
+        selectedCategories,
+      ]);
+
+      queryClient.setQueryData(
+        ["posts", selectedCategories],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              data: page.data.map((post: any) =>
+                post.id === postId
+                  ? { ...post, comments: post.comments - 1 }
+                  : post
+              ),
+            })),
+          };
+        }
+      );
+
+      return { previousPosts };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["postComments", currentPostId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+    },
+  });
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -33,7 +87,12 @@ const PostInfo = ({ authorId, author, date }: Props) => {
       </View>
 
       {authorId === currentUserId && (
-        <TouchableOpacity activeOpacity={0.7} onPress={() => {}}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            deleteCommentMutation.mutate();
+          }}
+        >
           <Text className="font-syne font-normal text-[14px] text-primary underline">
             Delete
           </Text>

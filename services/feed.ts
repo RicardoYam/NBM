@@ -78,6 +78,24 @@ export const createPostComments = async ({
   }
 };
 
+export const deletePostComments = async ({
+  postId,
+  commentId,
+}: {
+  postId: number;
+  commentId: number;
+}) => {
+  try {
+    const response = await nbmClient.delete(
+      `/posts/${postId}/comments/${commentId}`
+    );
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createPost = async ({
   title,
   content,

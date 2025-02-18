@@ -39,12 +39,43 @@ const Id = () => {
         postId: Number(id),
         text: commentContent,
       }),
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+
+      const previousPosts = queryClient.getQueryData([
+        "posts",
+        selectedCategories,
+      ]);
+
+      queryClient.setQueryData(
+        ["posts", selectedCategories],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              data: page.data.map((post: any) =>
+                post.id === Number(id)
+                  ? { ...post, comments: post.comments + 1 }
+                  : post
+              ),
+            })),
+          };
+        }
+      );
+
+      return { previousPosts };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["postComments", id] });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+
       setCommentContent("");
-    },
-    onError: (error) => {
-      console.error(error);
     },
   });
 
