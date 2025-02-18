@@ -8,6 +8,9 @@ import { icons } from "@/constants";
 import { getDate } from "@/utils/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ion from "react-native-vector-icons/Ionicons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createLikePosts } from "@/services/feed";
+import { useCategoryStore } from "@/store/useCategoryStore";
 
 interface Props {
   post: Post | undefined;
@@ -23,8 +26,49 @@ const FeedCard = ({
   otherClassName,
 }: Props) => {
   if (post === undefined) return null;
+  const queryClient = useQueryClient();
 
+  const { selectedCategories } = useCategoryStore();
   const [userId, setUserId] = useState<string | null>(null);
+
+  const likePostMutation = useMutation({
+    mutationKey: ["likePost", post.id],
+    mutationFn: () => createLikePosts({ postId: post.id }),
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+
+      const previousPosts = queryClient.getQueryData([
+        "posts",
+        selectedCategories,
+      ]);
+
+      queryClient.setQueryData(
+        ["posts", selectedCategories],
+        (oldData: any) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page: any) => ({
+              ...page,
+              data: page.data.map((p: Post) =>
+                p.id === post.id ? { ...p, likes: p.likes + 1 } : p
+              ),
+            })),
+          };
+        }
+      );
+
+      return { previousPosts };
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts", selectedCategories],
+      });
+    },
+  });
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -97,9 +141,16 @@ const FeedCard = ({
             </View>
 
             <View className="flex flex-row gap-2 items-center text-center">
-              <View className="mt-2">
-                <Ion name="heart-outline" size={24} color="#000" />
-              </View>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => {
+                  likePostMutation.mutate();
+                }}
+              >
+                <View className="mt-2">
+                  <Ion name="heart-outline" size={24} color="#000" />
+                </View>
+              </TouchableOpacity>
               <Text className="font-syne font-normal text-[14px] text-charcoal top-0.5">
                 {post.likes}
               </Text>
