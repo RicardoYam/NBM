@@ -110,3 +110,13 @@ export const uploadUserAvatar = async ({
     throw error;
   }
 };
+
+export const getTermsOfService = async () => {
+  try {
+    const response = await nbmClient.get("/terms-conditions");
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

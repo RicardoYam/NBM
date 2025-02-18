@@ -15,6 +15,10 @@ const AuthLayout = () => {
         name="settings/update-password"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="legal/terms-of-service"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

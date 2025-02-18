@@ -25,7 +25,7 @@ export const LEGALS = [
   {
     title: "Terms of service",
     icon: "Book1",
-    route: "",
+    route: "/legal/terms-of-service",
   },
   {
     title: "Privary Policy",
