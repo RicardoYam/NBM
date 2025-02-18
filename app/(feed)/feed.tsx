@@ -1,5 +1,11 @@
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import React, { useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
+import React, { useState, useCallback } from "react";
 import FeedHeader from "@/components/feed-header";
 import FeedCard from "@/components/feed-card";
 import { Post } from "@/types/feed";
@@ -7,12 +13,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getAllCategories, getAllPosts } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
-import Loading from "@/components/loading";
 import { PAGE_LIMIT, PAGE_NUMBER } from "@/constants/primitive";
 
 const Feed = () => {
   const [searchContent, setSearchContent] = useState<string>("");
   const { selectedCategories, toggleCategory } = useCategoryStore();
+  const [refreshing, setRefreshing] = useState(false);
 
   const getCategoryQuery = useQuery({
     queryKey: ["categories"],
@@ -37,10 +43,6 @@ const Feed = () => {
     enabled: !!getCategoryQuery.data,
   });
 
-  if (getCategoryQuery.isLoading || getPostsQuery.isLoading) {
-    return <Loading />;
-  }
-
   const categories = getCategoryQuery.data?.data ?? [];
   const posts = getPostsQuery.data?.pages?.flatMap((page) => page.data) ?? [];
 
@@ -54,6 +56,12 @@ const Feed = () => {
     toggleCategory(category);
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getPostsQuery.refetch();
+    setRefreshing(false);
+  }, [getPostsQuery]);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="h-full w-full bg-secondary">
@@ -66,39 +74,52 @@ const Feed = () => {
           handleSelectedCategory={handleSelectedCategory}
         />
 
-        <FlatList
-          data={filteredPosts}
-          keyExtractor={(post) => post.id.toString()}
-          renderItem={({ item }) => (
-            <FeedCard
-              post={item}
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              otherClassName="px-7 mt-2"
-            />
-          )}
-          onEndReached={() => {
-            if (
-              getPostsQuery.hasNextPage &&
-              !getPostsQuery.isFetchingNextPage
-            ) {
-              getPostsQuery.fetchNextPage();
+        {getPostsQuery.isLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : (
+          <FlatList
+            data={filteredPosts}
+            keyExtractor={(post) => post.id.toString()}
+            renderItem={({ item }) => (
+              <FeedCard
+                post={item}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                otherClassName="px-7 mt-2"
+              />
+            )}
+            onEndReached={() => {
+              if (
+                getPostsQuery.hasNextPage &&
+                !getPostsQuery.isFetchingNextPage
+              ) {
+                getPostsQuery.fetchNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.1}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={["#0000ff"]}
+              />
             }
-          }}
-          onEndReachedThreshold={0.1}
-          ListEmptyComponent={
-            <View className="bg-white items-center py-10">
-              <Text className="text-lg">No posts found.</Text>
-            </View>
-          }
-          ListFooterComponent={
-            getPostsQuery.isFetchingNextPage ? (
-              <View className="py-4">
-                <ActivityIndicator size="large" color="#0000ff" />
+            ListEmptyComponent={
+              <View className="bg-white items-center py-10">
+                <Text className="text-lg">No posts found.</Text>
               </View>
-            ) : null
-          }
-        />
+            }
+            ListFooterComponent={
+              getPostsQuery.isFetchingNextPage ? (
+                <View className="py-4">
+                  <ActivityIndicator size="large" color="#0000ff" />
+                </View>
+              ) : null
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
