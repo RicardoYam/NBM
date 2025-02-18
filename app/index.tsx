@@ -1,11 +1,41 @@
-import { Image, Text, View } from "react-native";
+import { Image, Text, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import { StatusBar } from "expo-status-bar";
 import Button from "@/components/button";
 import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 
 export default function Index() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+
+        if (token) {
+          router.replace("/feed");
+        }
+      } catch (error) {
+        console.error("Error checking token:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkToken();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="h-full bg-primary flex justify-center items-center">
+        <ActivityIndicator size="large" color="#fff" />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="h-full bg-primary">
       <StatusBar style="light" translucent />
