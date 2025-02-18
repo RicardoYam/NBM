@@ -76,7 +76,7 @@ const Feed = () => {
 
         {getPostsQuery.isLoading ? (
           <View className="flex-1 items-center justify-center">
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator size="large" color="#6537FF" />
           </View>
         ) : (
           <FlatList
@@ -114,7 +114,7 @@ const Feed = () => {
             ListFooterComponent={
               getPostsQuery.isFetchingNextPage ? (
                 <View className="py-4">
-                  <ActivityIndicator size="large" color="#0000ff" />
+                  <ActivityIndicator size="large" color="#6537FF" />
                 </View>
               ) : null
             }
