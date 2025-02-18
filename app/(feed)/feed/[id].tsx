@@ -1,21 +1,15 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import PostHeader from "@/components/post-header";
 import { useLocalSearchParams } from "expo-router";
 import { Comment, Post } from "@/types/feed";
 import PostComment from "@/components/post-comment";
-import Ion from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createPostComments, getPostComments } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import Loading from "@/components/loading";
+import PostMakeComment from "@/components/post-make-comment";
 
 const Id = () => {
   const [commentContent, setCommentContent] = useState<string>("");
@@ -91,6 +85,14 @@ const Id = () => {
 
   const postComments: Comment[] = getPostCommentsQuery.data.data || [];
 
+  const handleCommentChange = (text: string) => {
+    setCommentContent(text);
+  };
+
+  const handleCommentSubmit = () => {
+    postCommentMutation.mutate();
+  };
+
   return (
     <SafeAreaView className="h-full bg-white">
       <ScrollView className="h-full">
@@ -114,28 +116,11 @@ const Id = () => {
       </ScrollView>
 
       {/* Make a comment */}
-      <View className="flex flex-row gap-2 items-center border-t border-charcoal pt-6 px-7">
-        <TextInput
-          value={commentContent}
-          placeholder="Make a Comment"
-          placeholderTextColor="#383939"
-          style={{
-            fontFamily: "Syne",
-            fontSize: 14,
-            fontWeight: "600",
-          }}
-          className="flex-1 bg-[#EFEFEF] px-4 py-2"
-          onChangeText={(e) => setCommentContent(e)}
-        />
-
-        <TouchableOpacity
-          className="bg-primary p-1"
-          onPress={() => postCommentMutation.mutate()}
-          disabled={!commentContent.trim()}
-        >
-          <Ion name="arrow-up-sharp" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      <PostMakeComment
+        commentContent={commentContent}
+        handleTextChange={handleCommentChange}
+        handleCommentSubmit={handleCommentSubmit}
+      />
     </SafeAreaView>
   );
 };
