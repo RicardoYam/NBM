@@ -13,6 +13,7 @@ const PostComment = ({ comment }: Props) => {
   return (
     <View className="flex flex-col gap-4">
       <PostInfo
+        authorId={comment.userId}
         author={comment.user.firstName + " " + comment.user.lastName}
         date={getDate(comment.createdAt)}
       />
