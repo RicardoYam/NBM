@@ -10,7 +10,7 @@ interface Props {
   authorId: number;
   author: string;
   postId: number;
-  commentId: number;
+  commentId?: number;
   date: string;
 }
 
@@ -23,7 +23,7 @@ const PostInfo = ({ authorId, author, postId, commentId, date }: Props) => {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const deleteCommentMutation = useMutation({
     mutationKey: ["deleteComment", postId, commentId],
-    mutationFn: () => deletePostComments({ postId, commentId }),
+    mutationFn: () => deletePostComments({ postId, commentId: commentId ?? 0 }),
     onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: ["posts", selectedCategories],

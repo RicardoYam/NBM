@@ -90,6 +90,8 @@ const FeedCard = ({
           <PostInfo
             author={post.user.firstName + " " + post.user.lastName}
             date={getDate(post.createdAt)}
+            authorId={post.user.id}
+            postId={post.id}
           />
 
           {userId === post.user.id.toString() && (
