@@ -3,21 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import PostCreateHeader from "@/components/post-create-header";
 import ImageUpload from "@/components/image-upload";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { User } from "@/types/user";
+import { usePersonalInformationStore } from "@/store/usePersonalInformationStore";
 
 const PersonalInformation = () => {
-  const queryClient = useQueryClient();
-  const currentUser = queryClient
-    .getMutationCache()
-    .find({ mutationKey: ["signInUser"] })?.state.data as User;
-
-  const [userInfo, setUserInfo] = useState({
-    firstName: currentUser.user.firstName,
-    lastName: currentUser.user.lastName,
-    email: currentUser.user.email,
-  });
+  const { personalInformations, setPersonalInformations } =
+    usePersonalInformationStore();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -45,16 +35,16 @@ const PersonalInformation = () => {
               <View className="gap-1">
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
-                  value={userInfo.firstName}
+                  value={personalInformations.firstName}
                   onChangeText={(text) =>
-                    setUserInfo({ ...userInfo, firstName: text })
+                    setPersonalInformations({ firstName: text })
                   }
                 />
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
-                  value={userInfo.lastName}
+                  value={personalInformations.lastName}
                   onChangeText={(text) =>
-                    setUserInfo({ ...userInfo, lastName: text })
+                    setPersonalInformations({ lastName: text })
                   }
                 />
               </View>
@@ -65,9 +55,9 @@ const PersonalInformation = () => {
               <View className="gap-1">
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
-                  value={userInfo.email}
+                  value={personalInformations.email}
                   onChangeText={(text) =>
-                    setUserInfo({ ...userInfo, email: text })
+                    setPersonalInformations({ email: text })
                   }
                 />
               </View>

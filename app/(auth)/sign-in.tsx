@@ -11,9 +11,12 @@ import { User } from "@/types/user";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loading from "@/components/loading";
+import { usePersonalInformationStore } from "@/store/usePersonalInformationStore";
 
 const SignIn = () => {
   const [isError, setIsError] = useState(false);
+  const { personalInformations, setPersonalInformations } =
+    usePersonalInformationStore();
 
   const signInUserQuery = useMutation<
     User,
@@ -27,6 +30,12 @@ const SignIn = () => {
 
       AsyncStorage.setItem("userId", data.user.id.toString());
       AsyncStorage.setItem("token", data.accessToken);
+
+      setPersonalInformations({ id: data.user.id.toString() });
+      setPersonalInformations({ firstName: data.user.firstName });
+      setPersonalInformations({ lastName: data.user.lastName });
+      setPersonalInformations({ email: data.user.email });
+      setPersonalInformations;
 
       router.push("/feed");
     },
