@@ -3,12 +3,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import { StatusBar } from "expo-status-bar";
 import Button from "@/components/button";
-import { router } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
+
+  useFocusEffect(() => {
+    navigation.setOptions({ gestureEnabled: false });
+  });
 
   useEffect(() => {
     const checkToken = async () => {
