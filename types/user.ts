@@ -18,3 +18,8 @@ export interface SignUpUser {
   lastName: string;
   telephone: string;
 }
+
+export interface avatarUpload {
+  url: string;
+  fileName: string;
+}

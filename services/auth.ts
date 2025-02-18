@@ -1,6 +1,7 @@
 import { generateAustralianMobileNumber } from "@/utils/util";
 import nbmClient from ".";
 import { Address } from "@/types/address";
+import axios from "axios";
 
 export const signInUser = async ({
   email,
@@ -60,6 +61,52 @@ export const signUpUser = async ({
     return response.data;
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+};
+
+export const getUploadUrl = async ({
+  firstName,
+  lastName,
+}: {
+  firstName: string;
+  lastName: string;
+}) => {
+  try {
+    const fileName = `${firstName}-${lastName}`;
+    const response = await nbmClient.get("/files/upload/images", {
+      params: {
+        fileName,
+        folder: "avatar",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const uploadUserAvatar = async ({
+  url,
+  file,
+}: {
+  url: string;
+  file: string;
+}) => {
+  try {
+    var formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.put(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
     throw error;
   }
 };

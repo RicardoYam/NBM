@@ -12,7 +12,7 @@ interface Props {
 }
 
 const CreatePostStepThree = ({ formik, categories }: Props) => {
-  const { selectedCategory } = useCategoryStore((state) => state);
+  const { selectedCategories } = useCategoryStore((state) => state);
   const queryClient = useQueryClient();
 
   const handleTagToggle = (tag: string) => {
@@ -33,7 +33,9 @@ const CreatePostStepThree = ({ formik, categories }: Props) => {
 
     if (!error.title || !error.content || !error.tag) {
       formik.handleSubmit();
-      queryClient.invalidateQueries({ queryKey: ["posts", selectedCategory] });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", selectedCategories],
+      });
     }
   };
 

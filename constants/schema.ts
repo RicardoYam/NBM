@@ -19,3 +19,18 @@ export const VALIDATIONSCHEMA_SIGN_UP = Yup.object().shape({
     .oneOf([Yup.ref("password"), undefined], "Passwords must match.")
     .required(REQUIRED_MESSAGE("confirm password")),
 });
+
+export const VALIDATIONSCHEMA_UPDATE_PASSWORD = Yup.object().shape({
+  currentPassword: Yup.string().required(REQUIRED_MESSAGE("current password")),
+  newPassword: Yup.string()
+    .matches(/\d/, "Password must include at least one number.")
+    .matches(/[^A-Za-z0-9]/, "Password must include at least one symbol.")
+    .matches(
+      /(?=.*[a-z])(?=.*[A-Z])/,
+      "Password must include both uppercase and lowercase letters."
+    )
+    .required(REQUIRED_MESSAGE("new password")),
+  confirmNewPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword"), undefined], "Passwords must match.")
+    .required(REQUIRED_MESSAGE("confirm new password")),
+});

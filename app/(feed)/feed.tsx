@@ -1,10 +1,10 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import FeedHeader from "@/components/feed-header";
 import FeedCard from "@/components/feed-card";
 import { Post } from "@/types/feed";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getAllCategories, getAllPosts } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import Loading from "@/components/loading";
@@ -12,23 +12,28 @@ import { PAGE_LIMIT, PAGE_NUMBER } from "@/constants/primitive";
 
 const Feed = () => {
   const [searchContent, setSearchContent] = useState<string>("");
-  const { selectedCategory, setSelectedCategory } = useCategoryStore(
-    (state) => state
-  );
+  const { selectedCategories, toggleCategory } = useCategoryStore();
 
   const getCategoryQuery = useQuery({
     queryKey: ["categories"],
     queryFn: () => getAllCategories({ page: PAGE_NUMBER, limit: PAGE_LIMIT }),
   });
 
-  const getPostsQuery = useQuery({
-    queryKey: ["posts", selectedCategory],
-    queryFn: () =>
+  const getPostsQuery = useInfiniteQuery({
+    queryKey: ["posts", selectedCategories],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) =>
       getAllPosts({
-        page: PAGE_NUMBER,
+        page: pageParam,
         limit: PAGE_LIMIT,
-        tags: selectedCategory ? [selectedCategory] : [],
+        tags: selectedCategories ?? [],
       }),
+    getNextPageParam: (lastPage, allPages) => {
+      const totalPosts = lastPage.total;
+      const loadedPosts = allPages.flatMap((page) => page.data).length;
+
+      return loadedPosts < totalPosts ? allPages.length + 1 : undefined;
+    },
     enabled: !!getCategoryQuery.data,
   });
 
@@ -36,8 +41,8 @@ const Feed = () => {
     return <Loading />;
   }
 
-  const categories = getCategoryQuery.data.data;
-  const posts = getPostsQuery.data.data;
+  const categories = getCategoryQuery.data?.data ?? [];
+  const posts = getPostsQuery.data?.pages?.flatMap((page) => page.data) ?? [];
 
   const filteredPosts = posts.filter(
     (post: Post) =>
@@ -46,39 +51,55 @@ const Feed = () => {
   );
 
   const handleSelectedCategory = (category: string) => {
-    setSelectedCategory(selectedCategory === category ? null : category);
+    toggleCategory(category);
   };
 
   return (
-    <SafeAreaView className="h-full bg-white">
-      <ScrollView className="h-full">
-        <View className="h-full w-full bg-secondary gap-2">
-          <FeedHeader
-            categories={categories}
-            selectedCategory={selectedCategory}
-            placeholder="Search"
-            value={searchContent}
-            handleChangeText={(e) => setSearchContent(e)}
-            handleSelectedCategory={handleSelectedCategory}
-          />
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="h-full w-full bg-secondary">
+        <FeedHeader
+          categories={categories}
+          selectedCategories={selectedCategories}
+          placeholder="Search"
+          value={searchContent}
+          handleChangeText={(e) => setSearchContent(e)}
+          handleSelectedCategory={handleSelectedCategory}
+        />
 
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post: Post) => (
-              <FeedCard
-                key={post.id}
-                post={post}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-                otherClassName="px-7"
-              />
-            ))
-          ) : (
+        <FlatList
+          data={filteredPosts}
+          keyExtractor={(post) => post.id.toString()}
+          renderItem={({ item }) => (
+            <FeedCard
+              post={item}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              otherClassName="px-7 mt-2"
+            />
+          )}
+          onEndReached={() => {
+            if (
+              getPostsQuery.hasNextPage &&
+              !getPostsQuery.isFetchingNextPage
+            ) {
+              getPostsQuery.fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.1}
+          ListEmptyComponent={
             <View className="bg-white items-center py-10">
               <Text className="text-lg">No posts found.</Text>
             </View>
-          )}
-        </View>
-      </ScrollView>
+          }
+          ListFooterComponent={
+            getPostsQuery.isFetchingNextPage ? (
+              <View className="py-4">
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            ) : null
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 };

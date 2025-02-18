@@ -13,7 +13,7 @@ import { router } from "expo-router";
 
 interface Props {
   categories: Category[];
-  selectedCategory: string | null;
+  selectedCategories: string[] | null;
   value: string;
   placeholder: string;
   handleChangeText?: (e: string) => void;
@@ -22,7 +22,7 @@ interface Props {
 
 const FeedHeader = ({
   categories,
-  selectedCategory,
+  selectedCategories,
   value,
   placeholder,
   handleChangeText,
@@ -70,7 +70,9 @@ const FeedHeader = ({
             <View key={index}>
               <FeedCategory
                 category={category}
-                isActive={selectedCategory === category.name ? true : false}
+                isActive={
+                  selectedCategories?.includes(category.name) ? true : false
+                }
                 handleSelectedCategory={handleSelectedCategory}
               />
             </View>

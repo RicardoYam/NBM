@@ -20,7 +20,7 @@ import Loading from "@/components/loading";
 const Id = () => {
   const [commentContent, setCommentContent] = useState<string>("");
 
-  const { selectedCategory } = useCategoryStore((state) => state);
+  const { selectedCategories } = useCategoryStore((state) => state);
 
   const queryClient = useQueryClient();
 
@@ -52,10 +52,9 @@ const Id = () => {
     return <Loading />;
   }
 
-  const posts: Post[] | undefined = queryClient.getQueryData<{ data: Post[] }>([
-    "posts",
-    selectedCategory,
-  ])?.data;
+  const posts: Post[] | undefined = queryClient
+    .getQueryData<{ pages: { data: Post[] }[] }>(["posts", selectedCategories])
+    ?.pages.flatMap((page) => page.data);
 
   const post: Post | undefined = posts?.find((post) => post.id === Number(id));
 

@@ -77,6 +77,7 @@ const AuthSignUpStepTwo = ({ formik, title, subTitle }: Props) => {
 
     if (selectedAddress) {
       setSearchQuery(selectedAddress);
+      setAddressPredictions([]);
       addressDetailsMutation.mutate(place_id);
     }
   };

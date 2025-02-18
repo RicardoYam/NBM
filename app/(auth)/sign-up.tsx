@@ -12,8 +12,8 @@ import { useFormik } from "formik";
 import AuthHeader from "@/components/auth-header";
 import { VALIDATIONSCHEMA_SIGN_UP } from "@/constants/schema";
 import { useMutation } from "@tanstack/react-query";
-import { SignUpUser } from "@/types/user";
-import { signUpUser } from "@/services/auth";
+import { avatarUpload, SignUpUser } from "@/types/user";
+import { getUploadUrl, signUpUser, uploadUserAvatar } from "@/services/auth";
 import { Address } from "@/types/address";
 
 const SignUp = () => {
@@ -36,6 +36,26 @@ const SignUp = () => {
   >({
     mutationKey: ["signUp"],
     mutationFn: async (data) => {
+      if (data.avatar !== "") {
+        const response: avatarUpload = await getUploadUrl({
+          firstName: data.firstName,
+          lastName: data.lastName,
+        });
+
+        console.log(response);
+
+        if (
+          (await uploadUserAvatar({ url: response.url, file: data.avatar }))
+            .status === 200
+        ) {
+          return signUpUser({
+            ...data,
+            avatar: response.fileName,
+            address: data.address,
+          });
+        }
+      }
+
       return signUpUser({
         ...data,
         address: data.address,
