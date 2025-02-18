@@ -13,8 +13,11 @@ import Ion from "react-native-vector-icons/Ionicons";
 import { icons } from "@/constants";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePersonalInformationStore } from "@/store/usePersonalInformationStore";
 
 const Settings = () => {
+  const { clearPersonalInformations } = usePersonalInformationStore();
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" translucent />
@@ -59,6 +62,7 @@ const Settings = () => {
               activeOpacity={0.7}
               onPress={() => {
                 AsyncStorage.clear();
+                clearPersonalInformations();
                 router.push("/");
               }}
             >
