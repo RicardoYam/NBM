@@ -1,5 +1,4 @@
 import { View, ScrollView } from "react-native";
-import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormik } from "formik";
@@ -7,10 +6,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import CreatePostStepOne from "@/screens/create-post-step-one";
 import CreatePostStepTwo from "@/screens/create-post-step-two";
 import CreatePostStepThree from "@/screens/create-post-step-three";
-import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Category } from "@/types/feed";
 import { createPost } from "@/services/feed";
+import { VALIDATIONSCHEMA_CREATE_POST } from "@/constants/schema";
 
 const CreateNewPost = () => {
   const queryClient = useQueryClient();
@@ -40,24 +39,19 @@ const CreateNewPost = () => {
     },
   });
 
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    content: Yup.string().required("Content is required"),
-    tags: Yup.array().of(Yup.string()).min(1, "At least one tag is required"),
-  });
-
   const formik = useFormik({
     initialValues: {
       title: "",
       content: "",
       tags: [],
     },
-    validationSchema,
+    validationSchema: VALIDATIONSCHEMA_CREATE_POST,
     validateOnBlur: true,
     onSubmit: (values) => {
       createPostMutation.mutate(values);
     },
   });
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" translucent />

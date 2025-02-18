@@ -12,14 +12,12 @@ import Loading from "@/components/loading";
 import PostMakeComment from "@/components/post-make-comment";
 
 const Id = () => {
-  const [commentContent, setCommentContent] = useState<string>("");
-
-  const { selectedCategories } = useCategoryStore((state) => state);
-
   const queryClient = useQueryClient();
 
+  const [commentContent, setCommentContent] = useState<string>("");
+  const { selectedCategories } = useCategoryStore((state) => state);
+
   const { id } = useLocalSearchParams();
-  const postId = Array.isArray(id) ? id[0] : id;
 
   const getPostCommentsQuery = useQuery({
     queryKey: ["postComments", id],

@@ -9,7 +9,7 @@ import AuthError from "@/components/auth-error";
 import { VALIDATIONSCHEMA_UPDATE_PASSWORD } from "@/constants/schema";
 
 const UpdatePassword = () => {
-  const [globalError, setGlobalError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -21,17 +21,16 @@ const UpdatePassword = () => {
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: (values) => {
-      console.log("Submitting form...", values);
-      setGlobalError(null);
+      setErrorMessage(null);
     },
   });
 
   const handleSubmit = async () => {
     const errors = await formik.validateForm();
     if (Object.keys(errors).length > 0) {
-      setGlobalError(Object.values(errors)[0]);
+      setErrorMessage(Object.values(errors)[0]);
     } else {
-      setGlobalError(null);
+      setErrorMessage(null);
       formik.handleSubmit();
     }
   };
@@ -101,9 +100,9 @@ const UpdatePassword = () => {
                 </View>
               </View>
 
-              {globalError && (
+              {errorMessage && (
                 <AuthError
-                  message={globalError}
+                  message={errorMessage}
                   otherClass="px-[8px] py-[12px] items-center mt-6"
                 />
               )}

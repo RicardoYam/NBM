@@ -34,3 +34,9 @@ export const VALIDATIONSCHEMA_UPDATE_PASSWORD = Yup.object().shape({
     .oneOf([Yup.ref("newPassword"), undefined], "Passwords must match.")
     .required(REQUIRED_MESSAGE("confirm new password")),
 });
+
+export const VALIDATIONSCHEMA_CREATE_POST = Yup.object().shape({
+  title: Yup.string().required("Title is required"),
+  content: Yup.string().required("Content is required"),
+  tags: Yup.array().of(Yup.string()).min(1, "At least one tag is required"),
+});
