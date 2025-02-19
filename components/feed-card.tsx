@@ -92,6 +92,7 @@ const FeedCard = ({
             date={getDate(post.createdAt)}
             authorId={post.user.id}
             postId={post.id}
+            isComment={false}
           />
 
           {userId === post.user.id.toString() && (

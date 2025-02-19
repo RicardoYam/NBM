@@ -16,6 +16,7 @@ const PostComment = ({ comment }: Props) => {
         postId={comment.postId}
         commentId={comment.id}
         date={getDate(comment.createdAt)}
+        isComment={true}
       />
 
       <Text className="font-syne font-normal text-[14px] text-charcoal">

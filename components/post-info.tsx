@@ -12,9 +12,17 @@ interface Props {
   postId: number;
   commentId?: number;
   date: string;
+  isComment?: boolean;
 }
 
-const PostInfo = ({ authorId, author, postId, commentId, date }: Props) => {
+const PostInfo = ({
+  authorId,
+  author,
+  postId,
+  commentId,
+  date,
+  isComment,
+}: Props) => {
   const queryClient = useQueryClient();
   const { id } = useLocalSearchParams();
   const currentPostId = Array.isArray(id) ? id[0] : id;
@@ -86,7 +94,7 @@ const PostInfo = ({ authorId, author, postId, commentId, date }: Props) => {
         </Text>
       </View>
 
-      {authorId === currentUserId && (
+      {authorId === currentUserId && isComment && (
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
