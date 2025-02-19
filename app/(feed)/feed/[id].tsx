@@ -10,6 +10,7 @@ import { createPostComments, getPostComments } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import Loading from "@/components/loading";
 import PostMakeComment from "@/components/post-make-comment";
+import { COMMENT_PAGE_LIMIT, COMMENT_PAGE_NUMBER } from "@/constants/primitive";
 
 const Id = () => {
   const queryClient = useQueryClient();
@@ -21,7 +22,12 @@ const Id = () => {
 
   const getPostCommentsQuery = useQuery({
     queryKey: ["postComments", id],
-    queryFn: () => getPostComments({ id: Number(id), page: 1, limit: 10 }),
+    queryFn: () =>
+      getPostComments({
+        id: Number(id),
+        page: COMMENT_PAGE_NUMBER,
+        limit: COMMENT_PAGE_LIMIT,
+      }),
   });
 
   const postCommentMutation = useMutation({
