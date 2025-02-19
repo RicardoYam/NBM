@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import FeedHeader from "@/components/feed-header";
 import FeedCard from "@/components/feed-card";
 import { Post } from "@/types/feed";
@@ -44,7 +44,10 @@ const Feed = () => {
   });
 
   const categories = getCategoryQuery.data?.data ?? [];
-  const posts = getPostsQuery.data?.pages?.flatMap((page) => page.data) ?? [];
+  const posts = useMemo(
+    () => getPostsQuery.data?.pages?.flatMap((page) => page.data) ?? [],
+    [getPostsQuery.data]
+  );
 
   const filteredPosts = posts.filter(
     (post: Post) =>
