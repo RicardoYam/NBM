@@ -15,8 +15,7 @@ import { usePersonalInformationStore } from "@/store/usePersonalInformationStore
 
 const SignIn = () => {
   const [isError, setIsError] = useState(false);
-  const { personalInformations, setPersonalInformations } =
-    usePersonalInformationStore();
+  const { setPersonalInformations } = usePersonalInformationStore();
 
   const signInUserQuery = useMutation<
     User,
