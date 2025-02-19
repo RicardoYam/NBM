@@ -31,11 +31,12 @@ const SignIn = () => {
       AsyncStorage.setItem("userId", data.user.id.toString());
       AsyncStorage.setItem("token", data.accessToken);
 
-      setPersonalInformations({ id: data.user.id.toString() });
-      setPersonalInformations({ firstName: data.user.firstName });
-      setPersonalInformations({ lastName: data.user.lastName });
-      setPersonalInformations({ email: data.user.email });
-      setPersonalInformations;
+      setPersonalInformations({
+        id: data.user.id.toString(),
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        email: data.user.email,
+      });
 
       router.push("/feed");
     },
