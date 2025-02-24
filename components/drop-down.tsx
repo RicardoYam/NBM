@@ -6,13 +6,13 @@ import Ion from "react-native-vector-icons/Ionicons";
 interface Props {
   categories: Category[];
   selectedCategory: string[];
-  handleSelectedCategory: (value: string) => void;
+  onCategorySelect: (value: string) => void;
 }
 
 const DropDown = ({
   categories,
   selectedCategory,
-  handleSelectedCategory,
+  onCategorySelect,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -36,7 +36,7 @@ const DropDown = ({
               key={index}
               className="flex flex-row items-center gap-2 pl-5 pr-14 py-3 self-start"
               onPress={() => {
-                handleSelectedCategory(category.name);
+                onCategorySelect(category.name);
                 setIsOpen(false);
               }}
               activeOpacity={0.7}

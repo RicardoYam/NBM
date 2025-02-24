@@ -28,9 +28,7 @@ const Location = () => {
               <TextInput
                 className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
                 value={personalInformations.address}
-                onChangeText={(text) =>
-                  setPersonalInformations({ address: text })
-                }
+                onChangeText={(address) => setPersonalInformations({ address })}
               />
             </View>
           </View>

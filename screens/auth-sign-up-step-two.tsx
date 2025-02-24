@@ -6,14 +6,16 @@ import { useMutation } from "@tanstack/react-query";
 import { getPlaceAutoCompletion, getPlaceDetails } from "@/services/google";
 import { useState } from "react";
 import Ion from "react-native-vector-icons/Ionicons";
-import { Prediction } from "@/types/address";
+import { GoogleAdressComponent, Prediction } from "@/types/address";
+import { FormikProps } from "formik";
+import { SIGN_UP_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
   title: string;
   subTitle: string;
   isError: boolean;
   handleErrors: () => void;
-  formik: any;
+  formik: FormikProps<typeof SIGN_UP_INITIAL_VALUES>;
 }
 
 const AuthSignUpStepTwo = ({ formik, title, subTitle }: Props) => {
@@ -38,10 +40,11 @@ const AuthSignUpStepTwo = ({ formik, title, subTitle }: Props) => {
     mutationKey: ["addressDetails"],
     mutationFn: (placeId: string) => getPlaceDetails({ placeId }),
     onSuccess: (data) => {
-      const addressComponents = data.result.address_components;
+      const addressComponents: GoogleAdressComponent[] =
+        data.result.address_components;
 
       const getComponent = (type: string) => {
-        const component = addressComponents.find((comp: any) =>
+        const component = addressComponents.find((comp) =>
           comp.types.includes(type)
         );
         return component ? component.long_name : "";

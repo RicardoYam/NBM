@@ -5,9 +5,11 @@ import DropDown from "@/components/drop-down";
 import { Category } from "@/types/feed";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCategoryStore } from "@/store/useCategoryStore";
+import { FormikProps } from "formik";
+import { NEW_POST_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
-  formik: any;
+  formik: FormikProps<typeof NEW_POST_INITIAL_VALUES>;
   categories: Category[];
 }
 
@@ -31,7 +33,7 @@ const CreatePostStepThree = ({ formik, categories }: Props) => {
   const handleSubmission = async () => {
     const error = await formik.validateForm();
 
-    if (!error.title || !error.content || !error.tag) {
+    if (!error.title || !error.content || !error.tags) {
       formik.handleSubmit();
       queryClient.invalidateQueries({
         queryKey: ["posts", selectedCategories],
@@ -51,7 +53,7 @@ const CreatePostStepThree = ({ formik, categories }: Props) => {
       <DropDown
         categories={categories}
         selectedCategory={formik.values.tags}
-        handleSelectedCategory={handleTagToggle}
+        onCategorySelect={handleTagToggle}
       />
 
       <TextInput

@@ -7,16 +7,13 @@ import Input from "@/components/input";
 import { useFormik } from "formik";
 import AuthError from "@/components/auth-error";
 import { VALIDATIONSCHEMA_UPDATE_PASSWORD } from "@/constants/schema";
+import { UPDATE_PASSWORD_INITIAL_VALUES } from "@/constants/initials";
 
 const UpdatePassword = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formik = useFormik({
-    initialValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmNewPassword: "",
-    },
+    initialValues: UPDATE_PASSWORD_INITIAL_VALUES,
     validationSchema: VALIDATIONSCHEMA_UPDATE_PASSWORD,
     validateOnChange: false,
     validateOnBlur: true,

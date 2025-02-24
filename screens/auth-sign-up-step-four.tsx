@@ -5,13 +5,15 @@ import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import ImageUpload from "@/components/image-upload";
 import AuthImageSelection from "@/components/auth-image-selection";
+import { FormikProps } from "formik";
+import { SIGN_UP_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
   title: string;
   subTitle: string;
   isError: boolean;
   handleErrors: () => void;
-  formik: any;
+  formik: FormikProps<typeof SIGN_UP_INITIAL_VALUES>;
 }
 
 const AuthSignUpStepThree = ({ formik, title, subTitle }: Props) => {

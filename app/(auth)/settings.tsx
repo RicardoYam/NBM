@@ -11,7 +11,7 @@ import SettingsHeader from "@/components/settings-header";
 import { LEGALS, SETTINGS } from "@/constants/arrays";
 import Ion from "react-native-vector-icons/Ionicons";
 import { icons } from "@/constants";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePersonalInformationStore } from "@/store/usePersonalInformationStore";
 
@@ -32,9 +32,7 @@ const Settings = () => {
               Settings
             </Text>
             {SETTINGS.map((setting, index) => {
-              const IconComponent = icons[
-                setting.icon as keyof typeof icons
-              ] as React.FC<any>;
+              const IconComponent = icons[setting.icon as keyof typeof icons];
 
               return (
                 <TouchableOpacity
@@ -42,7 +40,7 @@ const Settings = () => {
                   className="flex flex-row items-center justify-between bg-secondary my-2 py-6 px-4"
                   activeOpacity={0.7}
                   onPress={() => {
-                    router.push(setting.route as any);
+                    router.push(setting.route as Href);
                   }}
                 >
                   <View className="flex flex-row items-center gap-3">
@@ -80,9 +78,7 @@ const Settings = () => {
               Legal
             </Text>
             {LEGALS.map((legal, index) => {
-              const IconComponent = icons[
-                legal.icon as keyof typeof icons
-              ] as React.FC<any>;
+              const IconComponent = icons[legal.icon as keyof typeof icons];
 
               return (
                 <TouchableOpacity
@@ -90,7 +86,7 @@ const Settings = () => {
                   className="flex flex-row items-center justify-between bg-secondary my-2 py-6 px-4"
                   activeOpacity={0.7}
                   onPress={() => {
-                    router.push(legal.route as any);
+                    router.push(legal.route as Href);
                   }}
                 >
                   <View className="flex flex-row items-center gap-3">

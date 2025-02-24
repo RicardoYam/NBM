@@ -36,15 +36,15 @@ const PersonalInformation = () => {
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
                   value={personalInformations.firstName}
-                  onChangeText={(text) =>
-                    setPersonalInformations({ firstName: text })
+                  onChangeText={(firstName) =>
+                    setPersonalInformations({ firstName })
                   }
                 />
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
                   value={personalInformations.lastName}
-                  onChangeText={(text) =>
-                    setPersonalInformations({ lastName: text })
+                  onChangeText={(lastName) =>
+                    setPersonalInformations({ lastName })
                   }
                 />
               </View>
@@ -56,9 +56,7 @@ const PersonalInformation = () => {
                 <TextInput
                   className="border border-primary py-4 px-3 font-syne font-normal text-[16px]"
                   value={personalInformations.email}
-                  onChangeText={(text) =>
-                    setPersonalInformations({ email: text })
-                  }
+                  onChangeText={(email) => setPersonalInformations({ email })}
                 />
               </View>
             </View>

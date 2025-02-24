@@ -4,9 +4,11 @@ import PostCreateHeader from "@/components/post-create-header";
 import { router } from "expo-router";
 import Checkbox from "expo-checkbox";
 import { Category } from "@/types/feed";
+import { FormikProps } from "formik";
+import { NEW_POST_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
-  formik: any;
+  formik: FormikProps<typeof NEW_POST_INITIAL_VALUES>;
   categories: Category[];
 }
 

@@ -5,6 +5,8 @@ import { router } from "expo-router";
 import AuthError from "../components/auth-error";
 import Input from "../components/input";
 import AuthFooter from "@/components/auth-footer";
+import { FormikProps } from "formik";
+import { SIGN_UP_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
   title: string;
@@ -12,7 +14,7 @@ interface Props {
   isError: boolean;
   setIsError: (value: boolean) => void;
   handleErrors: () => void;
-  formik: any;
+  formik: FormikProps<typeof SIGN_UP_INITIAL_VALUES>;
 }
 
 const AuthSignUpStepOne = ({

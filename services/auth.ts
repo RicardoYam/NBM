@@ -37,16 +37,6 @@ export const signUpUser = async ({
   confirmPassword: string;
 }) => {
   try {
-    console.log({
-      firstName,
-      lastName,
-      avatar,
-      email,
-      telephone: generateAustralianMobileNumber(),
-      address,
-      password,
-      confirmPassword,
-    });
     const response = await nbmClient.post("/auth/register", {
       firstName,
       lastName,

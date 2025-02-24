@@ -15,6 +15,22 @@ import { getAllCategories, getAllPosts } from "@/services/feed";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { PAGE_LIMIT, PAGE_NUMBER } from "@/constants/primitive";
 
+const renderEmptyComponent = () => {
+  return (
+    <View className="bg-white items-center py-10">
+      <Text className="text-lg">No posts found.</Text>
+    </View>
+  );
+};
+
+const renderFooterComponent = () => {
+  return (
+    <View className="py-4">
+      <ActivityIndicator size="large" color="#6537FF" />
+    </View>
+  );
+};
+
 const Feed = () => {
   const [searchContent, setSearchContent] = useState<string>("");
   const { selectedCategories, toggleCategory } = useCategoryStore();
@@ -74,7 +90,7 @@ const Feed = () => {
           placeholder="Search"
           value={searchContent}
           handleChangeText={(e) => setSearchContent(e)}
-          handleSelectedCategory={handleSelectedCategory}
+          onCategorySelect={handleSelectedCategory}
         />
 
         {getPostsQuery.isLoading ? (
@@ -109,17 +125,9 @@ const Feed = () => {
                 colors={["#0000ff"]}
               />
             }
-            ListEmptyComponent={
-              <View className="bg-white items-center py-10">
-                <Text className="text-lg">No posts found.</Text>
-              </View>
-            }
+            ListEmptyComponent={renderEmptyComponent}
             ListFooterComponent={
-              getPostsQuery.isFetchingNextPage ? (
-                <View className="py-4">
-                  <ActivityIndicator size="large" color="#6537FF" />
-                </View>
-              ) : null
+              getPostsQuery.isFetchingNextPage ? renderFooterComponent : null
             }
           />
         )}

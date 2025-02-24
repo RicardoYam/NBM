@@ -4,20 +4,14 @@ import { Text, TouchableOpacity } from "react-native";
 interface Props {
   category: Category;
   isActive: boolean;
-  handleSelectedCategory?: (category: string) => void;
+  onCategorySelect?: (category: string) => void;
 }
 
-const FeedCategory = ({
-  category,
-  isActive,
-  handleSelectedCategory,
-}: Props) => {
+const FeedCategory = ({ category, isActive, onCategorySelect }: Props) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      onPress={() =>
-        handleSelectedCategory && handleSelectedCategory(category.name)
-      }
+      onPress={() => onCategorySelect && onCategorySelect(category.name)}
     >
       <Text
         className={`font-syne font-base text-[14px] py-1 px-4 ${isActive ? "text-white bg-primary" : "text-charcoal bg-[#38393911]"}`}

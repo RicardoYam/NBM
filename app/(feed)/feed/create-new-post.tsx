@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Category } from "@/types/feed";
 import { createPost } from "@/services/feed";
 import { VALIDATIONSCHEMA_CREATE_POST } from "@/constants/schema";
+import { NEW_POST_INITIAL_VALUES } from "@/constants/initials";
 
 const CreateNewPost = () => {
   const queryClient = useQueryClient();
@@ -40,11 +41,7 @@ const CreateNewPost = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
-      title: "",
-      content: "",
-      tags: [],
-    },
+    initialValues: NEW_POST_INITIAL_VALUES,
     validationSchema: VALIDATIONSCHEMA_CREATE_POST,
     validateOnBlur: true,
     onSubmit: (values) => {

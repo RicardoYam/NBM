@@ -1,3 +1,4 @@
+import { PERSONAL_INFORMATION_INITIAL_VALUES } from "@/constants/initials";
 import { create } from "zustand";
 
 interface PersonalInformation {
@@ -16,13 +17,7 @@ interface PersonalInformationState {
 
 export const usePersonalInformationStore = create<PersonalInformationState>(
   (set) => ({
-    personalInformations: {
-      id: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: "",
-    },
+    personalInformations: PERSONAL_INFORMATION_INITIAL_VALUES,
 
     setPersonalInformations: (info) =>
       set((state) => ({
@@ -31,13 +26,7 @@ export const usePersonalInformationStore = create<PersonalInformationState>(
 
     clearPersonalInformations: () =>
       set({
-        personalInformations: {
-          id: "",
-          firstName: "",
-          lastName: "",
-          email: "",
-          address: "",
-        },
+        personalInformations: PERSONAL_INFORMATION_INITIAL_VALUES,
       }),
   })
 );

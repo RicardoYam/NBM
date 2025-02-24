@@ -3,6 +3,7 @@ import FormField from "./form-field";
 import Button from "./button";
 import AuthError from "./auth-error";
 import { useFormik } from "formik";
+import { SIGN_IN_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
   handleSignIn: (values: { email: string; password: string }) => void;
@@ -11,10 +12,7 @@ interface Props {
 
 const AuthSignInForm = ({ handleSignIn, isError }: Props) => {
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
+    initialValues: SIGN_IN_INITIAL_VALUES,
     onSubmit: (values) => {
       handleSignIn(values);
     },

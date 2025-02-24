@@ -17,7 +17,7 @@ interface Props {
   value: string;
   placeholder: string;
   handleChangeText?: (e: string) => void;
-  handleSelectedCategory?: (category: string) => void;
+  onCategorySelect?: (category: string) => void;
 }
 
 const FeedHeader = ({
@@ -26,7 +26,7 @@ const FeedHeader = ({
   value,
   placeholder,
   handleChangeText,
-  handleSelectedCategory,
+  onCategorySelect,
 }: Props) => {
   return (
     <View className="flex flex-col bg-white px-7">
@@ -70,10 +70,8 @@ const FeedHeader = ({
             <View key={index}>
               <FeedCategory
                 category={category}
-                isActive={
-                  selectedCategories?.includes(category.name) ? true : false
-                }
-                handleSelectedCategory={handleSelectedCategory}
+                isActive={!!selectedCategories?.includes(category.name)}
+                onCategorySelect={onCategorySelect}
               />
             </View>
           ))}

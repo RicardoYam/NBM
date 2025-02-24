@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router, useLocalSearchParams } from "expo-router";
-import Loading from "@/components/loading";
 import StepOne from "@/screens/auth-sign-up-step-one";
 import StepTwo from "@/screens/auth-sign-up-step-two";
 import StepThree from "@/screens/auth-sign-up-step-three";
@@ -15,6 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { avatarUpload, SignUpUser } from "@/types/user";
 import { getUploadUrl, signUpUser, uploadUserAvatar } from "@/services/auth";
 import { Address } from "@/types/address";
+import { SIGN_UP_INITIAL_VALUES } from "@/constants/initials";
 
 const SignUp = () => {
   const { step = "1" } = useLocalSearchParams();
@@ -42,8 +42,6 @@ const SignUp = () => {
           lastName: data.lastName,
         });
 
-        console.log(response);
-
         if (
           (await uploadUserAvatar({ url: response.url, file: data.avatar }))
             .status === 200
@@ -67,22 +65,7 @@ const SignUp = () => {
   });
 
   const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: {
-        street: "",
-        city: "",
-        state: "",
-        postalCode: "",
-        number: "",
-        country: "",
-      },
-      password: "",
-      confirmPassword: "",
-      avatar: "",
-    },
+    initialValues: SIGN_UP_INITIAL_VALUES,
     validationSchema: VALIDATIONSCHEMA_SIGN_UP,
     validateOnChange: false,
     validateOnBlur: false,

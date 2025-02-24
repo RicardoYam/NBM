@@ -46,14 +46,14 @@ const FeedCard = ({
 
       queryClient.setQueryData(
         ["posts", selectedCategories],
-        (oldData: any) => {
+        (oldData: { pages: { data: Post[] }[] } | undefined) => {
           if (!oldData) return oldData;
 
           return {
             ...oldData,
-            pages: oldData.pages.map((page: any) => ({
+            pages: oldData.pages.map((page) => ({
               ...page,
-              data: page.data.map((p: Post) =>
+              data: page.data.map((p) =>
                 p.id === post.id ? { ...p, likes: p.likes + 1 } : p
               ),
             })),

@@ -1,5 +1,3 @@
-import { number } from "yup";
-
 export interface Prediction {
   description: string;
   place_id: string;
@@ -12,4 +10,10 @@ export interface Address {
   state: string;
   postalCode: string;
   country: string;
+}
+
+export interface GoogleAdressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
 }

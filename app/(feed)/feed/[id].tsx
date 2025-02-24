@@ -49,13 +49,13 @@ const Id = () => {
 
       queryClient.setQueryData(
         ["posts", selectedCategories],
-        (oldData: any) => {
+        (oldData: { pages: { data: Post[] }[] } | undefined) => {
           if (!oldData) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page: any) => ({
+            pages: oldData.pages.map((page) => ({
               ...page,
-              data: page.data.map((post: any) =>
+              data: page.data.map((post) =>
                 post.id === Number(id)
                   ? { ...post, comments: post.comments + 1 }
                   : post

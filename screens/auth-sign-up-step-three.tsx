@@ -6,13 +6,15 @@ import Checkbox from "expo-checkbox";
 import { useState } from "react";
 import AuthError from "@/components/auth-error";
 import AuthPasswordTips from "@/components/auth-password-tips";
+import { FormikProps } from "formik";
+import { SIGN_UP_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
   title: string;
   subTitle: string;
   isError: boolean;
   handleErrors: () => void;
-  formik: any;
+  formik: FormikProps<typeof SIGN_UP_INITIAL_VALUES>;
 }
 
 const AuthSignUpStepThree = ({

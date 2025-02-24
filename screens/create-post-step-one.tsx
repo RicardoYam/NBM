@@ -2,9 +2,11 @@ import { View, TextInput } from "react-native";
 import React from "react";
 import PostCreateHeader from "@/components/post-create-header";
 import { router } from "expo-router";
+import { FormikProps } from "formik";
+import { NEW_POST_INITIAL_VALUES } from "@/constants/initials";
 
 interface Props {
-  formik: any;
+  formik: FormikProps<typeof NEW_POST_INITIAL_VALUES>;
 }
 
 const CreatePostStepOne = ({ formik }: Props) => {
